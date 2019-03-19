@@ -1,0 +1,21 @@
+{
+    "name": "graft/wp-container",
+    "description": "Container for WordPress Application",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zusoy",
+            "email": "gregoire.drapeau79@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Graft\\Container\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.2",
+        "psr/container": "^1.0"
+    }
+}
