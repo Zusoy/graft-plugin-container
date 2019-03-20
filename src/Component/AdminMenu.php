@@ -3,6 +3,7 @@
 namespace Graft\Container\Component;
 
 use Graft\Container\WPExecutableComponent;
+use Cocur\Slugify\Slugify;
 
 /**
  * WordPress Administration Menu
@@ -56,6 +57,84 @@ class AdminMenu extends WPExecutableComponent
      * @var string
      */
     protected $slug;
+
+
+    /**
+     * AdminMenu Constructor
+     * 
+     * @final
+     *
+     * @param string           $title      Menu Title
+     * @param array            $callback   Menu Callback
+     * @param string           $capability Menu Capability
+     * @param self|string|null $parent     Menu Parent
+     * @param string|null      $icon       Menu Icon
+     * @param integer|null     $pos        Menu Position
+     */
+    final public function __construct(
+        string $title,
+        array $callback,
+        string $capability,
+        $parent = null,
+        ?string $icon = null,
+        ?int $pos = null
+    )
+    {
+        $this->setTitle($title)
+            ->setCallback($callback)
+            ->setCapability($capability)
+            ->setParent($parent)
+            ->setIcon($icon)
+            ->setPosition($pos);
+        
+        //set menu Slug
+        $slugify = new Slugify();
+        $this->setSlug($slugify->slugify($title, '_'));
+
+        //create Menu through Hook
+        $action = ($this->isSubmenu()) 
+            ? "hookCreateSubmenu" 
+            : "hookCreateMenu";
+        
+        add_action("admin_menu", [$this, $action]);
+    }
+
+
+    /**
+     * Create WordPress Menu
+     *
+     * @return void
+     */
+    public function hookCreateMenu()
+    {
+        \add_menu_page(
+            $this->getTitle(),
+            $this->getTitle(),
+            $this->getCapability(),
+            $this->getSlug(),
+            $this->getCallback(),
+            $this->getIcon(),
+            $this->getPosition()
+        );
+    }
+
+
+    /**
+     * Create WordPress Submenu
+     *
+     * @return void
+     */
+    public function hookCreateSubmenu()
+    {
+        \add_submenu_page(
+            $this->getParent(),
+            $this->getTitle(),
+            $this->getTitle(),
+            $this->getCapability(),
+            $this->getSlug(),
+            $this->getCallback()
+        );
+    }
 
 
     /**
@@ -213,5 +292,16 @@ class AdminMenu extends WPExecutableComponent
     public function getSlug()
     {
         return $this->slug;
+    }
+
+
+    /**
+     * Check if is Submenu
+     *
+     * @return boolean
+     */
+    public function isSubmenu()
+    {
+        return ($this->parent !== null);
     }
 }
