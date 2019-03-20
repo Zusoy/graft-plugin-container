@@ -40,6 +40,17 @@ abstract class WPHook extends WPExecutableComponent
 
 
     /**
+     * WPHook Constructor
+     *
+     * @param string $tag Hook Tag
+     */
+    public function __construct(string $tag)
+    {
+        $this->setTag($tag);
+    }
+
+
+    /**
      * Set Hook Tag
      *
      * @param string $tag Hook Tag

@@ -19,9 +19,12 @@ class Filter extends WPHook
      * Filter Constructor
      * 
      * @final
+     * 
+     * @param string $tag Filter Tag
      */
-    final public function __construct()
+    final public function __construct(string $tag)
     {
+        parent::__construct($tag);
         $this->setId("hook.filter.".$this->tag);
     }
 
