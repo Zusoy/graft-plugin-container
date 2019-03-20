@@ -2,8 +2,8 @@
 
 namespace Graft\Container;
 
-use Graft\Container\Exception\WPComponentNotFoundException;
 use Psr\Container\ContainerInterface;
+use Graft\Container\Exception\WPComponentNotFoundException;
 use Graft\Container\WPComponent;
 use Graft\Container\WPExecutableComponent;
 use Graft\Container\Component\AdminMenu;
