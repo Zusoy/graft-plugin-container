@@ -6,6 +6,9 @@ use Psr\Container\ContainerInterface;
 use Graft\Container\Exception\WPComponentNotFoundException;
 use Graft\Container\WPComponent;
 use Graft\Container\WPExecutableComponent;
+use Graft\Container\WPHook;
+use Graft\Container\Component\Action;
+use Graft\Container\Component\Filter;
 use Graft\Container\Component\AdminMenu;
 
 /**
@@ -92,6 +95,48 @@ class WPContainer implements ContainerInterface
         return \array_filter($this->components, function($component)
         {
             return ($component instanceof WPExecutableComponent);
+        });
+    }
+
+
+    /**
+     * Get Hook Components
+     *
+     * @return WPHook[]|WPHook|null
+     */
+    public function getHookComponents()
+    {
+        return \array_filter($this->components, function($component)
+        {
+            return ($component instanceof WPHook);
+        });
+    }
+
+
+    /**
+     * Get Action Components
+     *
+     * @return Action[]|Action|null
+     */
+    public function getActionComponents()
+    {
+        return \array_filter($this->components, function($component)
+        {
+            return ($component instanceof Action);
+        });
+    }
+
+
+    /**
+     * Get Filter Components
+     *
+     * @return Filter[]|Filter|null
+     */
+    public function getFilterComponents()
+    {
+        return \array_filter($this->components, function($component)
+        {
+            return ($component instanceof Filter);
         });
     }
 }

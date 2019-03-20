@@ -24,6 +24,21 @@ abstract class WPComponent
 
 
     /**
+     * Set Component ID
+     *
+     * @param string $id Component ID
+     * 
+     * @return self
+     */
+    public function setId(string $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+
+    /**
      * Get Component ID
      *
      * @return string
