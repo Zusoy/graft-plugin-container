@@ -91,6 +91,9 @@ class AdminMenu extends WPExecutableComponent
         $slugify = new Slugify();
         $this->setSlug($slugify->slugify($title, '_'));
 
+        //set menu ID for Container
+        $this->setId("menu.admin.".$this->slug);
+
         //create Menu through Hook
         $action = ($this->isSubmenu()) 
             ? "hookCreateSubmenu" 
@@ -303,5 +306,16 @@ class AdminMenu extends WPExecutableComponent
     public function isSubmenu()
     {
         return ($this->parent !== null);
+    }
+
+
+    /**
+     * Check if Menu is Open
+     *
+     * @return boolean
+     */
+    public function isOpen()
+    {
+        return (\is_admin() && isset($_GET['page']) && $_GET['page'] === $this->slug);
     }
 }

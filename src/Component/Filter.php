@@ -16,6 +16,17 @@ use Graft\Container\WPHook;
 class Filter extends WPHook
 {
     /**
+     * Filter Constructor
+     * 
+     * @final
+     */
+    final public function __construct()
+    {
+        $this->setId("hook.filter.".$this->tag);
+    }
+
+
+    /**
      * Check if Filter is Playing
      *
      * @return boolean
