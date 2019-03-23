@@ -70,6 +70,7 @@ class WPContainer implements WPContainerInterface
             );
         }
 
+        $component->setId($id);
         $this->components[] = $component;
 
         return $this;
