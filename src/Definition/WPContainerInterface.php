@@ -12,7 +12,7 @@ use Graft\Container\WPComponent;
  * @category Definition
  * @author   Zusoy <gregoire.drapeau79@gmail.com>
  * @license  MIT
- * @since    0.0.2
+ * @since    0.0.1
  */
 interface WPContainerInterface extends ContainerInterface
 {
