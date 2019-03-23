@@ -16,20 +16,6 @@ use Graft\Container\WPHook;
 class Action extends WPHook
 {
     /**
-     * Action Constructor
-     * 
-     * @final
-     * 
-     * @param string $tag Action Tag
-     */
-    final public function __construct(string $tag)
-    {
-        parent::__construct($tag);
-        $this->setId("hook.action.".$this->tag);
-    }
-
-
-    /**
      * Check if Action is Playing
      *
      * @return boolean

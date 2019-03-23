@@ -2,8 +2,9 @@
 
 namespace Graft\Container;
 
-use Psr\Container\ContainerInterface;
+use Graft\Container\Definition\WPContainerInterface;
 use Graft\Container\Exception\WPComponentNotFoundException;
+use Graft\Container\Exception\WPContainerException;
 use Graft\Container\WPComponent;
 use Graft\Container\WPExecutableComponent;
 use Graft\Container\WPHook;
@@ -20,7 +21,7 @@ use Graft\Container\Component\AdminMenu;
  * @license  MIT
  * @since    0.0.1
  */
-class WPContainer implements ContainerInterface
+class WPContainer implements WPContainerInterface
 {
     /**
      * WordPress Container Components
@@ -48,6 +49,30 @@ class WPContainer implements ContainerInterface
         }
 
         return false;
+    }
+
+
+    /**
+     * Register Component into Container
+     *
+     * @param string      $id        Component ID
+     * @param WPComponent $component Component Instance
+     * 
+     * @throws WPContainerException
+     * 
+     * @return self
+     */
+    public function register(string $id, WPComponent $component)
+    {
+        if ($this->has($id)) {
+            throw new WPContainerException(
+                "The Component with ID '".$id."' already exist in container"
+            );
+        }
+
+        $this->components[] = $component;
+
+        return $this;
     }
 
 
@@ -137,6 +162,20 @@ class WPContainer implements ContainerInterface
         return \array_filter($this->components, function($component)
         {
             return ($component instanceof Filter);
+        });
+    }
+
+
+    /**
+     * Get Admin Menu Components
+     *
+     * @return AdminMenu[]|AdminMenu|null
+     */
+    public function getAdminMenuComponents()
+    {
+        return \array_filter($this->components, function($component)
+        {
+            return ($component instanceof AdminMenu);
         });
     }
 }

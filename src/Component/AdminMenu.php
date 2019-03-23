@@ -91,9 +91,6 @@ class AdminMenu extends WPExecutableComponent
         $slugify = new Slugify();
         $this->setSlug($slugify->slugify($title, '_'));
 
-        //set menu ID for Container
-        $this->setId("menu.admin.".$this->slug);
-
         //create Menu through Hook
         $action = ($this->isSubmenu()) 
             ? "hookCreateSubmenu" 
