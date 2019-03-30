@@ -5,12 +5,14 @@ namespace Graft\Container;
 use Graft\Container\Definition\WPContainerInterface;
 use Graft\Container\Exception\WPComponentNotFoundException;
 use Graft\Container\Exception\WPContainerException;
-use Graft\Container\WPComponent;
-use Graft\Container\WPExecutableComponent;
-use Graft\Container\WPHook;
+use Graft\Container\Exception\ParameterAlreadyExistException;
 use Graft\Container\Component\Action;
 use Graft\Container\Component\Filter;
 use Graft\Container\Component\AdminMenu;
+use Graft\Container\WPComponent;
+use Graft\Container\WPExecutableComponent;
+use Graft\Container\WPHook;
+use Graft\Container\Parameter;
 
 /**
  * Container for WordPress Application
@@ -29,6 +31,13 @@ class WPContainer implements WPContainerInterface
      * @var WPComponent[]
      */
     protected $components = [];
+
+    /**
+     * WordPress Container Parameters
+     *
+     * @var Parameter[]
+     */
+    protected $parameters = [];
 
 
     /**
@@ -97,6 +106,71 @@ class WPContainer implements WPContainerInterface
         }
 
         throw new WPComponentNotFoundException("WP Component with ID '".$id."' not found.");
+    }
+
+
+    /**
+     * Check if Container have Parameter
+     *
+     * @param string $name Parameter Name
+     * 
+     * @return boolean
+     */
+    public function hasParameter(string $name)
+    {
+        foreach ($this->parameters as $parameter)
+        {
+            if ($parameter->getName() === $name)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Add Container Parameter
+     * 
+     * @throws ParameterAlreadyExistException
+     *
+     * @param Parameter $parameter Parameter to Add
+     * 
+     * @return self
+     */
+    public function addParameter(Parameter $parameter)
+    {
+        if ($this->hasParameter($parameter->getName())) {
+            throw new ParameterAlreadyExistException(
+                "Parameter with name '".$parameter->getName()."' already exist in Container"
+            );
+        }
+
+        $this->parameters[] = $parameter;
+
+        return $this;
+    }
+
+
+    /**
+     * Get Container Parameter
+     *
+     * @param string $name Parameter Name
+     * 
+     * @return Parameter|null
+     */
+    public function getParameter(string $name)
+    {
+        foreach ($this->parameters as $parameter)
+        {
+            if ($parameter->getName() === $name)
+            {
+                return $parameter;
+            }
+        }
+
+        return null;
     }
 
 
