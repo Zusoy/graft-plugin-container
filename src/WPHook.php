@@ -38,6 +38,13 @@ abstract class WPHook extends WPExecutableComponent
      */
     protected $acceptedParams;
 
+    /**
+     * Hook Definition Location
+     *
+     * @var string
+     */
+    protected $definitionLocation;
+
 
     /**
      * Set Hook Tag
@@ -114,6 +121,32 @@ abstract class WPHook extends WPExecutableComponent
     public function getAcceptedParams()
     {
         return $this->acceptedParams;
+    }
+
+
+    /**
+     * Set Hook Definition Location
+     *
+     * @param string $location Hook Location
+     * 
+     * @return self
+     */
+    public function setDefinitionLocation(string $location)
+    {
+        $this->definitionLocation = $location;
+
+        return $this;
+    }
+
+
+    /**
+     * Get Hook Definition Location
+     *
+     * @return string
+     */
+    public function getDefinitionLocation()
+    {
+        return $this->definitionLocation;
     }
 
 
