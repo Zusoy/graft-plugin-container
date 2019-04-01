@@ -6,6 +6,7 @@ use Graft\Container\Definition\WPContainerInterface;
 use Graft\Container\Exception\WPComponentNotFoundException;
 use Graft\Container\Exception\WPContainerException;
 use Graft\Container\Exception\ParameterAlreadyExistException;
+use Graft\Container\Exception\ParameterNotFoundException;
 use Graft\Container\Component\Action;
 use Graft\Container\Component\Filter;
 use Graft\Container\Component\AdminMenu;
@@ -155,6 +156,8 @@ class WPContainer implements WPContainerInterface
 
     /**
      * Get Container Parameter
+     * 
+     * @throws ParameterNotFoundException
      *
      * @param string $name Parameter Name
      * 
@@ -170,7 +173,9 @@ class WPContainer implements WPContainerInterface
             }
         }
 
-        return null;
+        throw new ParameterNotFoundException(
+            "Parameter with name '".$name."' not Found in Container."
+        );
     }
 
 
