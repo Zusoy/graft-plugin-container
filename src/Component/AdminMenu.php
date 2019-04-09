@@ -96,7 +96,7 @@ class AdminMenu extends WPExecutableComponent
             ? "hookCreateSubmenu" 
             : "hookCreateMenu";
         
-        add_action("admin_menu", [$this, $action]);
+        \add_action("admin_menu", [$this, $action]);
     }
 
 

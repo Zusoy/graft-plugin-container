@@ -2,18 +2,10 @@
 
 namespace Graft\Container;
 
-use Graft\Container\Definition\WPContainerInterface;
-use Graft\Container\Exception\WPComponentNotFoundException;
-use Graft\Container\Exception\WPContainerException;
-use Graft\Container\Exception\ParameterAlreadyExistException;
-use Graft\Container\Exception\ParameterNotFoundException;
-use Graft\Container\Component\Action;
-use Graft\Container\Component\Filter;
-use Graft\Container\Component\AdminMenu;
 use Graft\Container\WPComponent;
-use Graft\Container\WPExecutableComponent;
 use Graft\Container\WPHook;
-use Graft\Container\Parameter;
+use Graft\Container\Component\AdminMenu;
+use DI\Container;
 
 /**
  * Container for WordPress Application
@@ -24,194 +16,51 @@ use Graft\Container\Parameter;
  * @license  MIT
  * @since    0.0.1
  */
-class WPContainer implements WPContainerInterface
+class WPContainer extends Container
 {
     /**
-     * WordPress Container Components
+     * Used WordPress Components
+     * (Hook, AdminMenu, Filter...)
      *
      * @var WPComponent[]
      */
-    protected $components = [];
-
-    /**
-     * WordPress Container Parameters
-     *
-     * @var Parameter[]
-     */
-    protected $parameters = [];
+    protected $wpComponents = [];
 
 
     /**
-     * Check if Container has Component with ID
+     * Add WordPress Component in Container
      *
-     * @param string $id
-     * 
-     * @return boolean
-     */
-    public function has($id)
-    {
-        foreach ($this->components as $component)
-        {
-            if ($component->getId() === $id)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Register Component into Container
-     *
-     * @param string      $id        Component ID
-     * @param WPComponent $component Component Instance
-     * 
-     * @throws WPContainerException
+     * @param WPComponent $component
      * 
      * @return self
      */
-    public function register(string $id, WPComponent $component)
+    public function addWordPressComponent(WPComponent $component)
     {
-        if ($this->has($id)) {
-            throw new WPContainerException(
-                "The Component with ID '".$id."' already exist in container"
-            );
-        }
-
-        $component->setId($id);
-        $this->components[] = $component;
+        $this->wpComponents[] = $component;
 
         return $this;
     }
 
 
     /**
-     * Get Component by ID
-     *
-     * @param string $id
-     * 
-     * @throws WPComponentNotFoundException
-     * 
-     * @return WPComponent|null
-     */
-    public function get($id)
-    {
-        foreach ($this->components as $component)
-        {
-            if ($component->getId() === $id)
-            {
-                return $component;
-            }
-        }
-
-        throw new WPComponentNotFoundException("WP Component with ID '".$id."' not found.");
-    }
-
-
-    /**
-     * Check if Container have Parameter
-     *
-     * @param string $name Parameter Name
-     * 
-     * @return boolean
-     */
-    public function hasParameter(string $name)
-    {
-        foreach ($this->parameters as $parameter)
-        {
-            if ($parameter->getName() === $name)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Add Container Parameter
-     * 
-     * @throws ParameterAlreadyExistException
-     *
-     * @param Parameter $parameter Parameter to Add
-     * 
-     * @return self
-     */
-    public function addParameter(Parameter $parameter)
-    {
-        if ($this->hasParameter($parameter->getName())) {
-            throw new ParameterAlreadyExistException(
-                "Parameter with name '".$parameter->getName()."' already exist in Container"
-            );
-        }
-
-        $this->parameters[] = $parameter;
-
-        return $this;
-    }
-
-
-    /**
-     * Get Container Parameter
-     * 
-     * @throws ParameterNotFoundException
-     *
-     * @param string $name Parameter Name
-     * 
-     * @return Parameter|null
-     */
-    public function getParameter(string $name)
-    {
-        foreach ($this->parameters as $parameter)
-        {
-            if ($parameter->getName() === $name)
-            {
-                return $parameter;
-            }
-        }
-
-        throw new ParameterNotFoundException(
-            "Parameter with name '".$name."' not Found in Container."
-        );
-    }
-
-
-    /**
-     * Get All Container Components
+     * Get WordPress Components
      *
      * @return WPComponent[]
      */
-    public function getComponents()
+    public function getWordPressComponents()
     {
-        return $this->components;
+        return $this->wpComponents;
     }
 
 
     /**
-     * Get Executable Components
+     * Get WordPress Hook Components
      *
-     * @return WPExecutableComponent[]|WPExecutableComponent|null
-     */
-    public function getExecutableComponents()
-    {
-        return \array_filter($this->components, function($component)
-        {
-            return ($component instanceof WPExecutableComponent);
-        });
-    }
-
-
-    /**
-     * Get Hook Components
-     *
-     * @return WPHook[]|WPHook|null
+     * @return WPHook[]|null
      */
     public function getHookComponents()
     {
-        return \array_filter($this->components, function($component)
+        return \array_filter($this->wpComponents, function($component)
         {
             return ($component instanceof WPHook);
         });
@@ -219,41 +68,13 @@ class WPContainer implements WPContainerInterface
 
 
     /**
-     * Get Action Components
+     * Get WordPress Administration Menu Components
      *
-     * @return Action[]|Action|null
+     * @return void
      */
-    public function getActionComponents()
+    public function getMenuComponents()
     {
-        return \array_filter($this->components, function($component)
-        {
-            return ($component instanceof Action);
-        });
-    }
-
-
-    /**
-     * Get Filter Components
-     *
-     * @return Filter[]|Filter|null
-     */
-    public function getFilterComponents()
-    {
-        return \array_filter($this->components, function($component)
-        {
-            return ($component instanceof Filter);
-        });
-    }
-
-
-    /**
-     * Get Admin Menu Components
-     *
-     * @return AdminMenu[]|AdminMenu|null
-     */
-    public function getAdminMenuComponents()
-    {
-        return \array_filter($this->components, function($component)
+        return \array_filter($this->wpComponents, function($component)
         {
             return ($component instanceof AdminMenu);
         });
