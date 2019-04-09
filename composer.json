@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^7.2",
-        "psr/container": "^1.0",
-        "cocur/slugify": "^3.2"
+        "cocur/slugify": "^3.2",
+        "php-di/php-di": "^6.0"
     }
 }
