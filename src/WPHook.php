@@ -47,6 +47,16 @@ abstract class WPHook extends WPExecutableComponent
 
 
     /**
+     * Hook into WordPress
+     * 
+     * @abstract
+     *
+     * @return void
+     */
+    public abstract function hook();
+
+
+    /**
      * Set Hook Tag
      *
      * @param string $tag Hook Tag

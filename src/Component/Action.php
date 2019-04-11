@@ -24,4 +24,20 @@ class Action extends WPHook
     {
         return \doing_action($this->tag);
     }
+
+
+    /**
+     * Hook Action into WordPress
+     *
+     * @return void
+     */
+    public function hook()
+    {
+        \add_action(
+            $this->tag,
+            $this->callback,
+            $this->priority,
+            $this->acceptedParams
+        );
+    }
 }
