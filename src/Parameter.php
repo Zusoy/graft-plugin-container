@@ -29,6 +29,24 @@ class Parameter
 
 
     /**
+     * Parameter Constructor
+     *
+     * @param string|null $name  Parameter Name (optional)
+     * @param mixed|null  $value Parameter Value (optional)
+     */
+    public function __construct(?string $name = null, $value = null)
+    {
+        if ($name !== null) {
+            $this->setName($name);
+        }
+
+        if ($value !== null) {
+            $this->setValue($value);
+        }
+    }
+
+
+    /**
      * Set Parameter Name
      *
      * @param string $name Parameter Name

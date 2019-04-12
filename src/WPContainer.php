@@ -137,6 +137,27 @@ class WPContainer extends Container
 
 
     /**
+     * Add Container Parameters from Array
+     *
+     * @param array $parametersArray Multidimensional Array
+     * 
+     * @return self
+     */
+    public function addParameters(array $parametersArray)
+    {
+        foreach ($parametersArray as $name => $value)
+        {
+            $param = new Parameter();
+            $param->setName($name)->setValue($value);
+
+            $this->addParameter($param);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * Get Container parameter by Name
      * 
      * @throws ParameterNotFoundException
