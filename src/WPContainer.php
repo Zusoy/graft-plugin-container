@@ -5,6 +5,9 @@ namespace Graft\Container;
 use Graft\Container\WPComponent;
 use Graft\Container\WPHook;
 use Graft\Container\Component\AdminMenu;
+use Graft\Container\Parameter;
+use Graft\Container\Exception\ParameterAlreadyExistException;
+use Graft\Container\Exception\ParameterNotFoundException;
 use DI\Container;
 
 /**
@@ -25,6 +28,13 @@ class WPContainer extends Container
      * @var WPComponent[]
      */
     protected $wpComponents = [];
+
+    /**
+     * Container Parameters
+     *
+     * @var Parameter[]
+     */
+    protected $parameters = [];
 
 
     /**
@@ -78,5 +88,75 @@ class WPContainer extends Container
         {
             return ($component instanceof AdminMenu);
         });
+    }
+
+
+    /**
+     * Check if Container has Parameter
+     * 
+     * @param string $name Parameter Name
+     *
+     * @return boolean
+     */
+    public function hasParameter(string $name)
+    {
+        foreach ($this->parameters as $parameter)
+        {
+            if ($parameter->getName() == $name)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Add Container Parameter
+     * 
+     * @throws ParameterAlreadyExistException
+     *
+     * @param Parameter $parameter Parameter object to Add
+     * 
+     * @return self
+     */
+    public function addParameter(Parameter $parameter)
+    {
+        if ($this->hasParameter($parameter->getName())) {
+            throw new ParameterAlreadyExistException(
+                "The parameter with name '".$parameter->getName()."' already exist 
+                in Container"
+            );
+        }
+
+        $this->parameters[] = $parameter;
+
+        return $this;
+    }
+
+
+    /**
+     * Get Container parameter by Name
+     * 
+     * @throws ParameterNotFoundException
+     *
+     * @param string $name Parameter Name to find
+     * 
+     * @return Parameter|null
+     */
+    public function getParameter(string $name)
+    {
+        foreach ($this->parameters as $parameter)
+        {
+            if ($parameter->getName() == $name)
+            {
+                return $parameter;
+            }
+        }
+
+        throw new ParameterNotFoundException(
+            "Parameter with name '".$name."' not found in Container"
+        );
     }
 }

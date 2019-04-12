@@ -24,4 +24,20 @@ class Filter extends WPHook
     {
         return \doing_filter($this->tag);
     }
+
+
+    /**
+     * Hook Filter into WordPress
+     *
+     * @return void
+     */
+    public function hook()
+    {
+        \add_filter(
+            $this->tag,
+            $this->callback,
+            $this->priority,
+            $this->acceptedParams
+        );
+    }
 }
