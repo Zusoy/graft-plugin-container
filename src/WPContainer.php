@@ -203,11 +203,11 @@ class WPContainer extends Container
     /**
      * Add Container Parameters from Array
      *
-     * @param array $parametersArray Multidimensional Array
+     * @param array $parametersArray Multidimensional Array (name => value)
      * 
      * @return self
      */
-    public function addParameters(array $parametersArray)
+    public function addParametersFromArray(array $parametersArray)
     {
         foreach ($parametersArray as $name => $value)
         {
@@ -218,6 +218,17 @@ class WPContainer extends Container
         }
 
         return $this;
+    }
+
+
+    /**
+     * Get Container parameters
+     *
+     * @return Parameter[]
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
 
