@@ -5,6 +5,8 @@ namespace Graft\Container;
 use Graft\Container\WPComponent;
 use Graft\Container\WPHook;
 use Graft\Container\Component\AdminMenu;
+use Graft\Container\Component\Action;
+use Graft\Container\Component\Filter;
 use Graft\Container\Parameter;
 use Graft\Container\Exception\ParameterAlreadyExistException;
 use Graft\Container\Exception\ParameterNotFoundException;
@@ -23,11 +25,19 @@ class WPContainer extends Container
 {
     /**
      * Used WordPress Components
-     * (Hook, AdminMenu, Filter...)
+     * (Action, AdminMenu, Filter...)
      *
      * @var WPComponent[]
      */
-    protected $wpComponents = [];
+    protected $usedWpComponents = [];
+
+    /**
+     * Available Custom WordPress Hooks
+     * (Action, Filter)
+     *
+     * @var WPHook[]
+     */
+    protected $availableWpHooks = [];
 
     /**
      * Container Parameters
@@ -38,39 +48,39 @@ class WPContainer extends Container
 
 
     /**
-     * Add WordPress Component in Container
+     * Add Used WordPress Component in Container
      *
      * @param WPComponent $component
      * 
      * @return self
      */
-    public function addWordPressComponent(WPComponent $component)
+    public function addUsedWordPressComponent(WPComponent $component)
     {
-        $this->wpComponents[] = $component;
+        $this->usedWpComponents[] = $component;
 
         return $this;
     }
 
 
     /**
-     * Get WordPress Components
+     * Get Used WordPress Components
      *
      * @return WPComponent[]
      */
-    public function getWordPressComponents()
+    public function getUsedWordPressComponents()
     {
-        return $this->wpComponents;
+        return $this->usedWpComponents;
     }
 
 
     /**
-     * Get WordPress Hook Components
+     * Get Used WordPress Hook Components
      *
-     * @return WPHook[]|null
+     * @return WPHook[]
      */
-    public function getHookComponents()
+    public function getUsedHookComponents()
     {
-        return \array_filter($this->wpComponents, function($component)
+        return \array_filter($this->usedWpComponents, function($component)
         {
             return ($component instanceof WPHook);
         });
@@ -78,16 +88,70 @@ class WPContainer extends Container
 
 
     /**
-     * Get WordPress Administration Menu Components
+     * Get Used WordPress Administration Menu Components
      *
-     * @return void
+     * @return AdminMenu[]
      */
-    public function getMenuComponents()
+    public function getUsedMenuComponents()
     {
-        return \array_filter($this->wpComponents, function($component)
+        return \array_filter($this->usedWpComponents, function($component)
         {
             return ($component instanceof AdminMenu);
         });
+    }
+
+
+    /**
+     * Add Available Hook Component in Container
+     *
+     * @param WPHook $hook
+     * 
+     * @return self
+     */
+    public function addAvailableHookComponent(WPHook $hook)
+    {
+        $this->availableWpHooks[] = $hook;
+
+        return $this;
+    }
+
+
+    /**
+     * Get Available WordPress Hooks Components
+     *
+     * @return WPHook[]
+     */
+    public function getAvailableHookComponents()
+    {
+        return $this->availableWpHooks;
+    }
+
+
+    /**
+     * Get Available WordPress Action Components
+     *
+     * @return Action[]
+     */
+    public function getAvailableActionComponents()
+    {
+        return \array_filter($this->availableWpHooks, function($hook)
+        {
+            return ($hook instanceof Action);
+        }); 
+    }
+
+
+    /**
+     * Get Available WordPress Filter Components
+     *
+     * @return Filter[]
+     */
+    public function getAvailableFilterComponents()
+    {
+        return \array_filter($this->availableWpHooks, function($hook)
+        {
+            return ($hook instanceof Filter);
+        }); 
     }
 
 
@@ -139,11 +203,11 @@ class WPContainer extends Container
     /**
      * Add Container Parameters from Array
      *
-     * @param array $parametersArray Multidimensional Array
+     * @param array $parametersArray Multidimensional Array (name => value)
      * 
      * @return self
      */
-    public function addParameters(array $parametersArray)
+    public function addParametersFromArray(array $parametersArray)
     {
         foreach ($parametersArray as $name => $value)
         {
@@ -154,6 +218,17 @@ class WPContainer extends Container
         }
 
         return $this;
+    }
+
+
+    /**
+     * Get Container parameters
+     *
+     * @return Parameter[]
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
 
